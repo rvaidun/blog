@@ -1,0 +1,9 @@
+{
+    "grammarly.selectors": [
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "_posts/2024-02-21-reverse-engineering-bereal.md"
+        }
+    ]
+}
