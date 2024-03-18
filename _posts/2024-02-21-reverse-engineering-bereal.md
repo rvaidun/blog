@@ -14,12 +14,13 @@ BeReal is a social media app that has recently gained popularity where the whole
 The first thing I like to do when reverse engineering a new application is inspect the network requests and see what you can find. The requests show what data an app is requesting from servers which is crucial in the reverse engineering process. For web applications, this is easy as all modern browsers give you the ability to see network requests a site is making. Google provides a [guide][googlechromenetworkrequests] for how to inspect networking activity on Chrome: 
 
 Unfortunately, BeReal does not have a web client and the only official clients are on iOS and Android so inspecting network requests will be a little tricky. We will have to use a man-in-the-middle proxy. This type of proxy sits between your device and router and will listen to requests your clients make and responses the server gives back. Mitmproxy provides a comprehensive guide on how it works and installation instructions over at the [mitmproxy docs][mitmproxy-docs]
-![example network requests](/images/instagram/mitm1.png)
+![example network requests]({{ "/images/instagram/mitm1.png" | absolute_url }})
+
 
 In early versions of the BeReal app, just a mitmproxy would be enough to start inspecting requests however newer versions of the app use SSL pinning to stop mitm attacks. SSL pinning is when the app hard-codes the SSL certificate of a server into the client application so even if mitmproxy's certificate is trusted systemwide the app will still drop the requests. To disable SSL pinning on iOS you will need a jailbroken iPhone and [Frida][frida]. I am using [ssl-kill-switch3][sslkillswitch3], a jailbreak tweak to disable SSL pinning system-wide.
 
 After the proxy is set up and SSL pinning disabled we can finally start inspecting network requests the BeReal app is making. I started up the BeReal app and found the following requests pop up on the proxy.
-![Network requests](/images/instagram/test.png)
+![Network requests]({{ "/images/instagram/test.png" | absolute_url }})
 
 # Login and Authentication
 To start using the API we need to figure out how authentication works to authorize our requests to the BeReal endpoints. BeReal's authentication only uses phone numbers with 2FA via SMS to log in users. Unfortunately in the latest version of the BeReal build BeReal is using non-standard SSL pinning techniques pre-login which I was unable to disable. I attempted to disable SSL pinning with SSL-kill-switch3 and Frida but both did not work and the client would not send the login requests to the server and hang with an infinite loading indicator. However, at the time of writing, SSLkillswitch still works to inspect network requests after the login flow to inspect other endpoints BeReal uses.
@@ -34,7 +35,7 @@ The first step in the login flow is the client initiates a request to a `verifyC
 ```
 `appToken` seems to be a static value as every time the client makes this request the same app token is sent. The server responds with a receipt.
 
-![verify client request](/images/instagram/verifyclient.png)
+![verify client request]({{ "/images/instagram/verifyclient.png" | absolute_url }})
 
 The client uses this receipt as a unique token to send to the endpoint that sends the verification SMS. The client makes another POST request to `https://www.googleapis.com/identitytoolkit/v3/relyingparty/sendVerificationCode?key=AIzaSyDwjfEeparokD7sXPVQli9NsTuhT6fJ6iA`  with a JSON body in the format of 
 ```json
@@ -74,14 +75,14 @@ BeFake hardcodes the `grant_type`, `client_id`, and `client_secret` to the value
 # Endpoints
 Now that we've got past the login flow, I can use mitmproxy and show the requests from the official client. After inspecting the requests the client is making I found one that looks like it has something to do with my friends' posts, `https://mobile.bereal.com/api/feeds/friends-v1`.
 
-![friends-v1 request](/images/instagram/friends-v1-req.png)
+![friends-v1 request]({{ "/images/instagram/friends-v1-req.png" | absolute_url }})
 
 However, for some reason, the server is giving my client a 301 Moved Permanently error and there is no content in the response. 
 
-![friends-v1 response](/images/instagram/friends-v1-res.png)
+![friends-v1 response]({{ "/images/instagram/friends-v1-res.png" | absolute_url }})
 
 I need to inspect this further so I copy as cURL. In Mitmproxy you can copy the current network request with the `:export.clip curl @focus` command. cURL is not very useful and I'd like to make a Python script that just makes a call to this endpoint so I paste my clipboard into [curlconverter][curlconverter] to quickly get a Python script. (Note: I have hidden the values specific to my request)
-![curlconveter.com](/images/instagram/curlconverter.png)
+![curlconveter.com]({{ "/images/instagram/curlconverter.png" | absolute_url }})
 
 I modify the script a little bit so I'm able to see the response.
 ```python
@@ -112,7 +113,7 @@ print(response.text)
 When testing I am seeing similar behavior as the official client and receiving a 304. I started messing around with the headers and found if you don't include the `if-none-match` header the server responds with 200 and sends back all of your friends' posts for the day. I also noted the fields `bereal-signature`, `authorization`, `bereal-device-id`, and `bereal-timezone` are required and failure to provide proper value in any of these fields results in a 401.
 
 Let's start with the most obvious field `authorization`. This is the same token we got from the login step and the client is including this so the server can authenticate/identify which user is making the request. `bereal-device-id` seems to just be a UUID generated randomly that uniquely represents my phone. It is unclear why `bereal-timezone` is being sent. The signature seems to be a set of random letters. I had no idea what `bereal-signature` could have been so I used a little Chat GPT magic and figured out it was a B64 encoded string. I decoded the string and found the following
-![curlconveter.com](/images/instagram/chatgpt-magic.png)
+![chat GPT conversation]({{ "/images/instagram/chatgpt-magic.png" | absolute_url }})
 
 
 ```bash
@@ -182,7 +183,7 @@ I ran the same trace command with the BeReal app and saw the following happen.
 {% include youtubePlayer.html id="QK8hmfLr3_c" %}
 
 Let's understand what's happening here. First frida-trace auto generates a bunch of handlers for all the crypto libraries in the `__handlers__` directory. Opening the directory shows the following
-![crypto handlers generated by Frida](/images/instagram/frida-handlers.png)
+![crypto handlers generated by Frida]({{ "/images/instagram/frida-handlers.png" | absolute_url }})
 Frida first automatically generates hooks for all functions in the libcommonCrypto library and writes the hooks to the `__handlers__` folder. With these hooks, we can know when the functions get called and other important information such as the state of the app and the parameters passed into the function. Frida-trace only generates the handlers if the handlers directory is not found in the working directory. On subsequent runs, we can instantly see the calls being made. In the video it took too long for Frida to generate all the handlers and the app crashed so I ran the command again and was finally able to see all calls made in the crypto library. There are 1000s of calls to the crypto library happening but after analyzing the function calls for a few hours I find 3 calls that look particularly interesting.
 ```
 1700 ms  CCHmacInit(ctx=0x16deb2ae0, algorithm=0x2, key=0x2816b1fa0, keyLength=0x20)
