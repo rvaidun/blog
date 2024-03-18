@@ -70,7 +70,7 @@ From my testing, the operation is always hardcoded to `SIGN_UP_OR_IN`. This endp
 }
 ```       
 
-BeFake hardcodes the `grant_type`, `client_id`, and `client_secret` to the values shown above. The token is grabbed from the previous request to the `/token` Google API endpoint. I am unsure how the official client generates `client_secret` and `client_id` This server responds with an `access_token`, `refresh_token` and `expires_in`. The `expires_in` is just the number of seconds until this set of tokens expires. When the token does expire the previous two requests (`https://securetoken.googleapis.com/v1/token?key=AIzaSyDwjfEeparokD7sXPVQli9NsTuhT6fJ6iA` and `https://auth.bereal.team/token?grant_type=firebase`) need to be run again to get a new set of tokens. We can use `access_token`` as the JWT token to authenticate with the BeReal API.
+BeFake hardcodes the `grant_type`, `client_id`, and `client_secret` to the values shown above. The token is grabbed from the previous request to the `/token` Google API endpoint. I am unsure how the official client generates `client_secret` and `client_id` This server responds with an `access_token`, `refresh_token` and `expires_in`. The `expires_in` is just the number of seconds until this set of tokens expires. When the token does expire the previous two requests (`https://securetoken.googleapis.com/v1/token?key=AIzaSyDwjfEeparokD7sXPVQli9NsTuhT6fJ6iA` and `https://auth.bereal.team/token?grant_type=firebase`) need to be run again to get a new set of tokens. We can use `access_token` as the JWT token to authenticate with the BeReal API.
 
 # Endpoints
 Now that we've got past the login flow, I can use mitmproxy and show the requests from the official client. After inspecting the requests the client is making I found one that looks like it has something to do with my friends' posts, `https://mobile.bereal.com/api/feeds/friends-v1`.
@@ -231,7 +231,33 @@ I have slightly changed the output to protect my device ID and BeReal's secret k
 ABCDEFGHIJKLMNOPQRSTUVWXYYZAmerica/Los_Angeles1710631549%
 ➜  ~
 ```
-The base64encoding is just the `device_id`, timezone, and current unix timestamp concatenated. It also makes sense why the `bereal-timestamp` header needs to be sent now, so the server can verify the signature is correct. There is probably some logic in the BeReal servers that generates a hash with the UNIX timestamp provided in the signature, device_id, and timezone and verifies that the client has the same hash. We finally know both the message and key being used for the SHA256 HMAC! With all this information I wrote a simple Python script that allows me to generate signatures quickly
+The base64encoding is just the `device_id`, timezone, and current unix timestamp concatenated. It also makes sense why the `bereal-timestamp` header needs to be sent now, so the server can verify the signature is correct. There is probably some logic in the BeReal servers that generates a hash with the UNIX timestamp provided in the signature, device_id, and timezone and verifies that the client has the same hash. We finally know both the message and key being used for the SHA256 HMAC!
+For example, let's say a client passes these headers
+```json
+{
+    "bereal-signature": "MToxNzA3NDgwMjI4OhBj2ijVK5qyabYJuKF4QThGuIJmIzabd/dIYQYtzLZQ",
+    "bereal-timezone": "Europe/Paris",
+    "bereal-device-id": "937v3jb942b0h6u9"
+}
+After decoding the signature with hexdump we get
+```bash
+➜  ~ echo MToxNzA3NDgwMjI4OhBj2ijVK5qyabYJuKF4QThGuIJmIzabd/dIYQYtzLZQ | base64 --decode | hexdump -C
+00000000  31 3a 31 37 30 37 34 38  30 32 32 38 3a 10 63 da  |1:1707480228:.c.|
+00000010  28 d5 2b 9a b2 69 b6 09  b8 a1 78 41 38 46 b8 82  |(.+..i....xA8F..|
+00000020  66 23 36 9b 77 f7 48 61  06 2d cc b6 50           |f#6.w.Ha.-..P|
+0000002d
+➜  ~
+```
+We are trying to find a SHA256 hash that starts with `1063da`. Since we know both the message and secret key we can generate a SHA 256 HMAC with the following command
+```bash
+# First find the base64 encoding and then get the HMAC
+➜  ~ echo -n "937v3jb942b0h6u9Europe/Paris1707480228" | base64
+OTM3djNqYjk0MmIwaDZ1OUV1cm9wZS9QYXJpczE3MDc0ODAyMjg=
+➜  ~ echo -n "OTM3djNqYjk0MmIwaDZ1OUV1cm9wZS9QYXJpczE3MDc0ODAyMjg=" | openssl dgst -sha256 -hmac "\$ecretKey123456"
+SHA2-256(stdin)= 1063da28d52b9ab269b609b8a178413846b8826623369b77f74861062dccb650
+➜  ~
+```
+Notice how the hash is identical to the hash in the signature. With all this information I wrote a simple Python script that allows me to generate signatures quickly.
 ```py
 import base64
 import hashlib
@@ -264,7 +290,7 @@ print("bereal-signature:", s3.decode("utf-8"))
 We can use the values provided by this script as headers to the `friends-v1` endpoint without receiving 401s. This allows us to generate fake devices for BeReal's API. We can also generate new unique signatures on the fly without having to rely on the client to get a new signature.
 
 # What's Next
-I don't plan on developing this project further as I was able to complete my goal of bringing BeReal to the web and learning more about reverse engineering
+I don't plan on developing this project further as I was able to complete my goal of bringing BeReal to the web and learning more about reverse engineering.
 
 
 [mitmproxy-docs]: https://docs.mitmproxy.org/stable/
