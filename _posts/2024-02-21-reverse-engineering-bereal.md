@@ -225,7 +225,7 @@ After modifying the `frida-trace` command to only trace the CCHmac calls in the 
 4139 ms  data: QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVlaQW1lcmljYS9Mb3NfQW5nZWxlczE3MTA2MzE1NDk=
 4139 ms  CCHmacFinal(ctx=0x16e51eae0, macOut=0x283407960)
 ```
-I have slightly changed the output to protect my device ID and BeReal's secret key. I recognize the `data` to be a Base64 encoded string and after decoding I see the following
+I have changed the output to protect my device ID and BeReal's secret key. I recognize the `data` to be a Base64 encoded string and after decoding I see the following
 ```bash
 ➜  ~ echo QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVlaQW1lcmljYS9Mb3NfQW5nZWxlczE3MTA2MzE1NDk= | base64 --decode
 ABCDEFGHIJKLMNOPQRSTUVWXYYZAmerica/Los_Angeles1710631549%
@@ -239,6 +239,7 @@ For example, let's say a client passes these headers
     "bereal-timezone": "Europe/Paris",
     "bereal-device-id": "937v3jb942b0h6u9"
 }
+```
 After decoding the signature with hexdump we get
 ```bash
 ➜  ~ echo MToxNzA3NDgwMjI4OhBj2ijVK5qyabYJuKF4QThGuIJmIzabd/dIYQYtzLZQ | base64 --decode | hexdump -C
