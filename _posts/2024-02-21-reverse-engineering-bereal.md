@@ -8,16 +8,16 @@ Reverse engineering has always intrigued me, offering the opportunity to unlock 
 
 
 # What is BeReal
-BeReal is a social media app that has recently gained popularity where the whole idea is at a random time every day all users in a region will get a notification when it is time to "Be Real". When you receive the notification the idea is you post a photo of whatever you are doing in the moment. The catch is that you are only able to see your friends' posts after you have posted your BeReal for the day and will only see blurred images. I wanted to reverse-engineer the app to see if it is possible to view your friends' posts from a web browser instead of the app. 
+BeReal is a social media app that has recently gained popularity. Where the whole idea is at a random time every day, all users in a region will get a notification when it is time to "Be Real." When you receive the notification, you post a photo of whatever you are doing at the moment. The catch is that you can only see your friends' posts after posting your BeReal for the day and will only see blurred images before. I wanted to reverse-engineer the app to see if viewing your friends' posts from a web browser instead of the app is possible.
 
 # Network Requests
-The first thing I like to do when reverse engineering a new application is inspect the network requests and see what you can find. The requests show what data an app is requesting from servers which is crucial in the reverse engineering process. For web applications, this is easy as all modern browsers give you the ability to see network requests a site is making. Google provides a [guide][googlechromenetworkrequests] for how to inspect networking activity on Chrome: 
+The first thing I like to do when reverse engineering a new application is inspect the network requests and see what you can find. The requests show what data an app requests from servers, which is crucial in reverse engineering. Finding network requests is easy for web applications as all modern browsers allow you to see network requests a site is making. Google provides a [guide][googlechromenetworkrequests] for how to inspect networking activity on Chrome.
 
-Unfortunately, BeReal does not have a web client and the only official clients are on iOS and Android so inspecting network requests will be a little tricky. We will have to use a man-in-the-middle proxy. This type of proxy sits between your device and router and will listen to requests your clients make and responses the server gives back. Mitmproxy provides a comprehensive guide on how it works and installation instructions over at the [mitmproxy docs][mitmproxy-docs]
+Unfortunately, BeReal does not have a web client; the official clients are only available on iOS and Android, so inspecting network requests will be tricky. We will have to use a man-in-the-middle proxy. This type of proxy sits between your device and router and will listen to requests your clients make and responses the server gives back. Mitmproxy provides a comprehensive guide on how it works and installation instructions over at the [mitmproxy docs][mitmproxy-docs]
 ![example network requests]({{ "/images/instagram/mitm1.png" | absolute_url }})
 
 
-In early versions of the BeReal app, just a mitmproxy would be enough to start inspecting requests however newer versions of the app use SSL pinning to stop mitm attacks. SSL pinning is when the app hard-codes the SSL certificate of a server into the client application so even if mitmproxy's certificate is trusted systemwide the app will still drop the requests. To disable SSL pinning on iOS you will need a jailbroken iPhone and [Frida][frida]. I am using [ssl-kill-switch3][sslkillswitch3], a jailbreak tweak to disable SSL pinning system-wide.
+In early versions of the BeReal app, just a mitmproxy would be enough to start inspecting requests; however, newer versions of the app use SSL pinning to stop MITM attacks. SSL pinning is when the app hard-codes the SSL certificate of a server into the client application so even if mitmproxy's certificate is trusted systemwide the app will still drop the requests. To disable SSL pinning on iOS you will need a jailbroken iPhone and [Frida][frida]. I am using [ssl-kill-switch3][sslkillswitch3], a jailbreak tweak to disable SSL pinning system-wide.
 
 After the proxy is set up and SSL pinning disabled we can finally start inspecting network requests the BeReal app is making. I started up the BeReal app and found the following requests pop up on the proxy.
 ![Network requests]({{ "/images/instagram/test.png" | absolute_url }})
@@ -27,7 +27,7 @@ To start using the API we need to figure out how authentication works to authori
 
 Using mitmproxy on older builds of BeReal and other Github repositories that reverse engineer BeReal I was able to piece together how BeReal authentication works and implemented authentication in my repository [befake][befake]. The paragraphs in this section explain how BeFake is doing authentication as I am unable to get past the SSL pinning in the official app. If anyone reading this knows how to get past SSL pinning before login please contact me I would greatly appreciate it. The code for the login section can be found in [pages/Login.vue](https://github.com/rvaidun/befake/blob/e54e0ec424d44d56375395e9b4dd3b39ee72c250/src/pages/Login.vue#L106) on the befake repository.
 
-The first step in the login flow is the client initiates a request to a `verifyClient` endpoint. The client makes a POST request to `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyClient?key=AIzaSyDwjfEeparokD7sXPVQli9NsTuhT6fJ6iA` with the following body
+The first step in the login flow is the client initiates a request to a `verifyClient` endpoint. The client makes a POST request to `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyClient?key=AIzaSyDwjfEeparokD7sXPVQli9NsTuhT6fJ6iA` with the following body.
 ```json
 {
     "appToken":"54F80A258C35A916B38A3AD83CA5DDD48A44BFE2461F90831E0F97EBA4BB2EC7"
@@ -53,14 +53,14 @@ After sending this request the BeReal servers will send an SMS message with the 
     "operation": "SIGN_UP_OR_IN"
 }
 ```
-From my testing, the operation is always hardcoded to `SIGN_UP_OR_IN`. This endpoint sends back a `refreshToken`. The refreshToken is not enough to authenticate with the API we will need full JWT tokens (Read more on [JWT tokens][jwttokens]) The client makes yet another request with the `refreshToken` to get JWT tokens. The client makes a POST request to `https://securetoken.googleapis.com/v1/token?key=AIzaSyDwjfEeparokD7sXPVQli9NsTuhT6fJ6iA` with the following JSON body
+From my testing, the operation is always hardcoded to `SIGN_UP_OR_IN`. This endpoint sends back a `refreshToken`. The refreshToken is not enough to authenticate with the API we will need full JWT tokens (Read more on [JWT tokens][jwttokens]) The client makes yet another request with the `refreshToken` to get JWT tokens. The client makes a POST request to `https://securetoken.googleapis.com/v1/token?key=AIzaSyDwjfEeparokD7sXPVQli9NsTuhT6fJ6iA` with the following JSON body.
 ```json
 {
     "grant_type": "refresh_token",
     "refresh_token": "Refresh token received from the verifyCustomToken endpoint",
 }
 ```
-`grant_type` is hard coded to `refresh_token`. If all goes well this server will send back the following data `refresh_token`, `id_token`, and a `user_id` The server makes one final POST request to `https://auth.bereal.team/token?grant_type=firebase` with the following JSON body
+`grant_type` is hard coded to `refresh_token`. If all goes well this server will send back the following data `refresh_token`, `id_token`, and a `user_id` The server makes one final POST request to `https://auth.bereal.team/token?grant_type=firebase` with the following JSON body.
 ```json
 {
     "grant_type": "firebase",
@@ -81,7 +81,7 @@ However, for some reason, the server is giving my client a 301 Moved Permanently
 
 ![friends-v1 response]({{ "/images/instagram/friends-v1-res.png" | absolute_url }})
 
-I need to inspect this further so I copy as cURL. In Mitmproxy you can copy the current network request with the `:export.clip curl @focus` command. cURL is not very useful and I'd like to make a Python script that just makes a call to this endpoint so I paste my clipboard into [curlconverter][curlconverter] to quickly get a Python script. (Note: I have hidden the values specific to my request)
+I need to inspect this further so I copy as cURL. In Mitmproxy you can copy the current network request with the `:export.clip curl @focus` command. cURL is not very useful and I'd like to make a Python script that just makes a call to this endpoint so I paste my clipboard into [curlconverter][curlconverter] to quickly get a Python script. (Note: I have changed the `authorization`, `bereal-device-id`, and `bereal-user-id`)
 ![curlconveter.com]({{ "/images/instagram/curlconverter.png" | absolute_url }})
 
 I modify the script a little bit so I'm able to see the response.
@@ -110,9 +110,9 @@ response = requests.get('https://mobile.bereal.com/api/feeds/friends-v1', header
 print(response.status_code)
 print(response.text)
 ```
-When testing I am seeing similar behavior as the official client and receiving a 304. I started messing around with the headers and found if you don't include the `if-none-match` header the server responds with 200 and sends back all of your friends' posts for the day. I am assuming the `if-none-match` is a way for the client to tell the server it has already downloaded some photos so only send the response if there are more posts the client has not yet downloaded. I also noted the fields `bereal-signature`, `authorization`, `bereal-device-id`, and `bereal-timezone` are required and failure to provide proper value in any of these fields results in a 401.
+When testing, I see similar behavior as the official client and receive a 304. I started messing around with the headers and found if you don't include the `if-none-match` header, the server will respond with 200 and sends back all of your friends' posts for the day. I am assuming the `if-none-match` is a way for the client to tell the server it has already downloaded some photos so only send the response if there are more posts the client has not yet downloaded. I also noted the fields `bereal-signature`, `authorization`, `bereal-device-id`, and `bereal-timezone` are required, and failure to provide proper value in any of these fields results in a 401.
 
-Let's start with the most obvious field `authorization`. This is the same token we got from the login step and the client is including this so the server can authenticate/identify which user is making the request. `bereal-device-id` seems to just be a UUID generated randomly that uniquely represents my phone. It is unclear why `bereal-timezone` is being sent. The signature seems to be a set of random letters. I had no idea what `bereal-signature` could have been so I used a little Chat GPT magic and figured out it was a B64 encoded string. I decoded the string and found the following
+Let's start with the most obvious field `authorization`, the same token we got from the login step. The client includes this header so the server can authenticate/identify which user is making the request. `bereal-device-id` seems to just be a UUID generated randomly that uniquely represents my device. It is unclear why `bereal-timezone` is being sent. The signature seems to be a set of random letters. I had no idea what `bereal-signature` could have been so I used a little Chat GPT magic and figured out it was a Base 64 encoded string. I decoded the string and found the following.
 ![chat GPT conversation]({{ "/images/instagram/chatgpt-magic.png" | absolute_url }})
 
 
@@ -121,7 +121,7 @@ Let's start with the most obvious field `authorization`. This is the same token 
 1:1710551855:��=�>n���\�7�CfNs��~I��{�����e%
 ➜  ~
 ```
-It looks like the signatures are in the format of `1:{random_numbers}:{random_bits}`. I tested out a couple more signatures and found the same pattern after decoding. Each time the client makes a request using the API a unique `bereal-signature` is generated so I could get as many signatures as I needed. I was also pretty quickly able to realize the random_numbers was the current time as a [UNIX timestamp][unix]. I needed to further decode the random bytes so I used [hexdump][hexdump].
+It looks like the signatures are in the format of `1:{random_numbers}:{random_bits}`. I tested out a couple more signatures and found the same pattern after decoding. Each time the client makes a request using the API a unique `bereal-signature` is generated so I could get as many signatures as I needed. I was also pretty quickly able to realize the random_numbers was the current time as a [UNIX timestamp][unix]. I needed to further decode the `random_bits` so I used [hexdump][hexdump].
 ```bash
 ➜  ~ echo MToxNzEwNTUxODU1OpHVPe0+bt7AyVyvN5FDHmZOc8DLfkm9mXuQ+ZD/lcVl | base64 --decode | hexdump -C
 00000000  31 3a 31 37 31 30 35 35  31 38 35 35 3a 91 d5 3d  |1:1710551855:..=|
@@ -231,7 +231,7 @@ I have changed the output to protect my device ID and BeReal's secret key. I rec
 ABCDEFGHIJKLMNOPQRSTUVWXYYZAmerica/Los_Angeles1710631549%
 ➜  ~
 ```
-The base64encoding is just the `device_id`, timezone, and current unix timestamp concatenated. It also makes sense why the `bereal-timestamp` header needs to be sent now, so the server can verify the signature is correct. There is probably some logic in the BeReal servers that generates a hash with the UNIX timestamp provided in the signature, device_id, and timezone and verifies that the client has the same hash. We finally know both the message and key being used for the SHA256 HMAC!
+The base64encoding is just the `device_id`, timezone, and current unix timestamp concatenated. It also makes sense why the `bereal-timestamp` header needs to be sent now, so the server can verify the signature is correct. There is probably some logic in the BeReal servers that generates a hash with the UNIX timestamp provided in the signature, device_id, and timezone and verifies that the client has provided the same hash. We finally know both the message and key being used for the SHA256 HMAC!
 For example, let's say a client passes these headers
 ```json
 {
