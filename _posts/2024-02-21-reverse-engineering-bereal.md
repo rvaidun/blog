@@ -214,13 +214,13 @@ onEnter(log, args, state) {
     for (let i = 0; i < uint8Array.length; i++) {
         utf8String += String.fromCharCode(uint8Array[i]);
     }
-    log(`key: ${utf8String}`);
+    log(`key: ${utf8String}`);& t
 }
 ```
 After modifying the `frida-trace` command to only trace the CCHmac calls in the BeReal app with `frida-trace -U -f AlexisBarreyat.BeReal -i "CCHmac*"` I see the following.
 ```
 4139 ms  CCHmacInit(ctx=0x16e51eae0, algorithm=0x2, key=0x2834051a0, keyLength=0x20)
-4139 ms  key: $ecretKey123456
+4139 ms  key: 6a204bd89f3c8348afd5c77c717a097a
 4139 ms  CCHmacUpdate(ctx=0x16e51eae0, data=0x280fcd420, dataLength=0x58)
 4139 ms  data: QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVlaQW1lcmljYS9Mb3NfQW5nZWxlczE3MTA2MzE1NDk=
 4139 ms  CCHmacFinal(ctx=0x16e51eae0, macOut=0x283407960)
@@ -235,26 +235,28 @@ The base64encoding is just the `device_id`, timezone, and current unix timestamp
 For example, let's say a client passes these headers
 ```json
 {
-    "bereal-signature": "MToxNzA3NDgwMjI4OhBj2ijVK5qyabYJuKF4QThGuIJmIzabd/dIYQYtzLZQ",
-    "bereal-timezone": "Europe/Paris",
-    "bereal-device-id": "937v3jb942b0h6u9"
+    "bereal-signature": "MToxNzA3NDgwMjI4OmzYQbXJ1vIhcmqV+ApgyUB3/D51zICaGoNR0GjZjWmS",
+    "bereal-timezone": "America/Los_Angeles",
+    "bereal-device-id": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 }
 ```
 After decoding the signature with hexdump we get
 ```bash
-➜  ~ echo MToxNzA3NDgwMjI4OhBj2ijVK5qyabYJuKF4QThGuIJmIzabd/dIYQYtzLZQ | base64 --decode | hexdump -C
-00000000  31 3a 31 37 30 37 34 38  30 32 32 38 3a 10 63 da  |1:1707480228:.c.|
-00000010  28 d5 2b 9a b2 69 b6 09  b8 a1 78 41 38 46 b8 82  |(.+..i....xA8F..|
-00000020  66 23 36 9b 77 f7 48 61  06 2d cc b6 50           |f#6.w.Ha.-..P|
+➜  ~ echo -n MToxNzA3NDgwMjI4OmzYQbXJ1vIhcmqV+ApgyUB3/D51zICaGoNR0GjZjWmS | base64 --decode | hexdump -C
+00000000  31 3a 31 37 30 37 34 38  30 32 32 38 3a 6c d8 41  |1:1707480228:l.A|
+00000010  b5 c9 d6 f2 21 72 6a 95  f8 0a 60 c9 40 77 fc 3e  |....!rj...`.@w.>|
+00000020  75 cc 80 9a 1a 83 51 d0  68 d9 8d 69 92           |u.....Q.h..i.|
 0000002d
 ➜  ~
 ```
 We are trying to find a SHA256 hash that starts with `1063da`. Since we know both the message and secret key we can generate a SHA 256 HMAC with the following command
 ```bash
 # First find the base64 encoding and then get the HMAC
-➜  ~ echo -n "937v3jb942b0h6u9Europe/Paris1707480228" | base64
+➜  ~ echo -n "ABCDEFGHIJKLMNOPQRSTUVWXYZAmerica/Los_Angeles1707480228" | base64
 OTM3djNqYjk0MmIwaDZ1OUV1cm9wZS9QYXJpczE3MDc0ODAyMjg=
-➜  ~ echo -n "OTM3djNqYjk0MmIwaDZ1OUV1cm9wZS9QYXJpczE3MDc0ODAyMjg=" | openssl dgst -sha256 -hmac "\$ecretKey123456"
+QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpBbWVyaWNhL0xvc19BbmdlbGVzMTcwNzQ4MDIyOA==
+➜  ~ echo -n "OTM3djNqYjk0MmIwaDZ1OUV1cm9wZS9QYXJpczE3MDc0ODAyMjg=" | openssl dgst -sha256 -hmac "\6a204bd89f3c8348afd5c77c717a097a"
+➜  ~ echo -n "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpBbWVyaWNhL0xvc19BbmdlbGVzMTcwNzQ4MDIyOA==" | openssl dgst -sha256 -hmac "6a204bd89f3c8348afd5c77c717a097a"
 SHA2-256(stdin)= 1063da28d52b9ab269b609b8a178413846b8826623369b77f74861062dccb650
 ➜  ~
 ```
@@ -263,7 +265,7 @@ Notice how the hash is identical to the hash in the signature. With all this inf
 import base64
 import hashlib
 import hmac
-key = "$ecretKey123456"
+key = "6a204bd89f3c8348afd5c77c717a097a"
 device_id = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 timezone = "America/Los_Angeles"
 unixts = "1707480228"
