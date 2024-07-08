@@ -249,15 +249,14 @@ After decoding the signature with hexdump we get
 0000002d
 ➜  ~
 ```
-We are trying to find a SHA256 hash that starts with `1063da`. Since we know both the message and secret key we can generate a SHA 256 HMAC with the following command
+We are trying to find a SHA256 hash that starts with `6cd841...`. Since we know both the message and secret key we can generate a SHA 256 HMAC with the following command
 ```bash
 # First find the base64 encoding and then get the HMAC
 ➜  ~ echo -n "ABCDEFGHIJKLMNOPQRSTUVWXYZAmerica/Los_Angeles1707480228" | base64
-OTM3djNqYjk0MmIwaDZ1OUV1cm9wZS9QYXJpczE3MDc0ODAyMjg=
 QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpBbWVyaWNhL0xvc19BbmdlbGVzMTcwNzQ4MDIyOA==
-➜  ~ echo -n "OTM3djNqYjk0MmIwaDZ1OUV1cm9wZS9QYXJpczE3MDc0ODAyMjg=" | openssl dgst -sha256 -hmac "\6a204bd89f3c8348afd5c77c717a097a"
 ➜  ~ echo -n "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVpBbWVyaWNhL0xvc19BbmdlbGVzMTcwNzQ4MDIyOA==" | openssl dgst -sha256 -hmac "6a204bd89f3c8348afd5c77c717a097a"
-SHA2-256(stdin)= 1063da28d52b9ab269b609b8a178413846b8826623369b77f74861062dccb650
+SHA2-256(stdin)= 6cd841b5c9d6f221726a95f80a60c94077fc3e75cc809a1a8351d068d98d6992
+➜  ~
 ➜  ~
 ```
 Notice how the hash is identical to the hash in the signature. With all this information I wrote a simple Python script that allows me to generate signatures quickly.
