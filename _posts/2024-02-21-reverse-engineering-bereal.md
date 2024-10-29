@@ -306,5 +306,5 @@ I don't plan on developing this project further as I was able to complete my goa
 [hashing]: https://www.okta.com/identity-101/hashing-algorithms/#:~:text=A%20hashing%20algorithm%20is%20a,and%20decoded%20by%20anyone%20else.
 [unix]: https://www.unixtimestamp.com/
 [cchmacinit]: https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/CCHmacInit.3cc.html
-[cchmacheader]: https://opensource.apple.com/source/CommonCrypto/CommonCrypto-55010/CommonCrypto/CommonHMAC.h.auto.html
+[cchmacheader]: https://github.com/Apple-FOSS-Mirror/CommonCrypto/blob/master/CommonCrypto/CommonHMAC.h
 [adt]: https://eecs280staff.github.io/notes/05_Const_Structs_ADTs_in_C.html#abstract-data-types-in-c
