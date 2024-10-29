@@ -307,4 +307,4 @@ I don't plan on developing this project further as I was able to complete my goa
 [unix]: https://www.unixtimestamp.com/
 [cchmacinit]: https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/CCHmacInit.3cc.html
 [cchmacheader]: https://opensource.apple.com/source/CommonCrypto/CommonCrypto-55010/CommonCrypto/CommonHMAC.h.auto.html
-[adt]: https://eecs280staff.github.io/notes/07_ADTs_in_C.html
+[adt]: https://eecs280staff.github.io/notes/05_Const_Structs_ADTs_in_C.html#abstract-data-types-in-c
