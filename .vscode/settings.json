@@ -4,6 +4,11 @@
             "language": "markdown",
             "scheme": "file",
             "pattern": "_posts/2024-02-21-reverse-engineering-bereal.md"
+        },
+        {
+            "language": "markdown",
+            "scheme": "file",
+            "pattern": "_posts/2024-11-30-italy-trip.md"
         }
     ]
 }
