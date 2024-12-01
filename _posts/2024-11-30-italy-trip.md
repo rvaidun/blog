@@ -64,7 +64,7 @@ On this day we woke up pretty late after clubbing last night and had a nice brun
 # Venice → Verona (Day 10)
 The day started with us checking out of the apartment and dropping our bags off in a luggage locker and so we could explore Venice during the day. We went to the oldest cafe in Italy but everything was extremely expensive so we just took photos since the interior is very fancy and left. I got a lil sandwich as a snack and was eating as we were walking around but I got swarmed by a pigeon and dropped the sandwich. At least 10 pigeons came down. We went to a cheap eats place to eat pasta around this time.
 
-After lunch we did a 45 Gondola ride
+After lunch we did a 45 minute Gondola ride through the smaller canals and a little bit down the grand canal. After gondola we had a lot of time to kill so we walked around the city for 5 hours shopping and eating small snacks. Around 6 pm we made our way down to the train station and got on the train to Verona.
 
 # Verona → Milan (Day 11)
 
