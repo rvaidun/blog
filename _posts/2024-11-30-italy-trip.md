@@ -67,9 +67,15 @@ The day started with us checking out of the apartment and dropping our bags off 
 After lunch we did a 45 minute Gondola ride through the smaller canals and a little bit down the grand canal. After gondola we had a lot of time to kill so we walked around the city for 5 hours shopping and eating small snacks. Around 6 pm we made our way down to the train station and got on the train to Verona.
 
 # Verona → Milan (Day 11)
+In the morning we woke up and walked to Hertz and rented a car. We got a super nice Ford Focus ST Line which had massive screen with wireless carplay for only 100 bucks. We drove around Verona for a lil bit and saw the castles from the car. Then we headed out towards Milan which is 1.5 hours away.
+
+On the way to Milan we stopped at the city of Sirmione because a local told us it was a nice stop on the way to Milan. It's a small city by the lake and we saw the beach by the lake. We walked around the farmers market and bought some Italian pastries. We ate lunch at some mid cafe but it was nice & cheap.
+
+After we reached Milan we checked out the Starbucks Reserve which had a nice aesthetic and you could see the assembly line for the coffee bags they produce. They also had unique drinks that are not available at normal starbucks. Afterwards we walked around the city center area and checked out Duomo during the day. We also went shopping in the winter wonderland and bought some gifts as well as some desserts. Afterwards we drove over to Milan Centrale station and parked the car there. We bought a bottle of wine from the same shopkeeper we bought wine from on our first day in Milan and he gave us a free bag of chips as a gift :).
+
+We rented bikes and went to Rangoli, which is supposedly the best Indian restaurant in Milan. It was mid. Then we drove over to our AirBnB in Malpensa a 20 minute drive from the airport
 
 # Milan (Day 12)
-
 
 
 
