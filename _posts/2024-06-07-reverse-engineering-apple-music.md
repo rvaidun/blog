@@ -6,7 +6,7 @@ categories: reverse-engineering
 ---
 
 # Preface
-This blog post is unfinished. The goal of this was to document my joruney reverse engineering the Apple Music app to make the queue more like Spotify. Pre iOS 18 the Apple Music queue acted more as a stack than a queue and I wanted to modify the queue feature to be more like a queue. In iOS 18 it the Apple Music queue was updated to act more like Spotify so I have abandoned working on it. I decided to publish the post even though it is extremely rough and unfinished to share my findings and hopefully to help others to start reverse engineering with iOS. I also used this blog as a notebook to remember stuff I found earlier when reverse engineering. 
+The goal of this was to document my journey reverse engineering the Apple Music app to make the queue more like Spotify. Pre iOS 18 the Apple Music queue acted more as a stack than a queue and I wanted to modify the queue feature to be more like a queue. In iOS 18 it the Apple Music queue was updated to act more like Spotify so I have abandoned working on it. I decided to publish the post even though it is extremely rough and unfinished to share my findings and hopefully to help others to start reverse engineering with iOS. I also used this blog as a notebook to remember stuff I found earlier when reverse engineering. 
 # Setup
 Setting up debugserver entitlements
 
