@@ -11,6 +11,11 @@ This article will discuss how to safely torrent files. It is intended for people
 # What is torrenting?
 Torrenting is a way to share files over the internet. It works by breaking up the file into small pieces and distributing them across a network of computers. When you download a file using a torrent, you are actually downloading pieces of the file from multiple sources at the same time. This makes the download faster and more reliable than downloading the file from a single source. It also makes it harder for authorities to track who is hosting the file since the file is spread out across multiple servers/computers and taking down one server/computer won't stop the file from being shared. It is important to note that torrenting is not illegal, but downloading copyrighted material without permission is illegal.
 
+## Important things to keep in mind
+ Here are some tips to keep in mind when torrenting:
+- Always download torrents from trusted sources. Downloading torrents from untrusted sources can lead to malware being installed on your computer.
+- Always use a VPN when torrenting. A VPN will encrypt your internet connection and hide your IP address, making it harder for people to track what you are downloading. Note anyone can see what IP addresses are downloading a torrent since it is a peer-to-peer network and your IP address is publicly visible, so if you do download copyrighted material without permission, don't be surprised if you get a letter from your ISP.
+
 # Torrent Client
 The first thing you need to do to start torrenting is to download a torrent client. A torrent client is a program that allows you to download and upload files using the BitTorrent protocol. There are many different torrent clients available, but I feel like most of them are bloated with ads and unnecessary features. This article will use the [transmission](https://transmissionbt.com/) client and how to use it through the command line. If you are scared of CLI and want a GUI transmission client, you can download it from [here](https://transmissionbt.com/download/).
 
@@ -55,9 +60,6 @@ Here are some useful commands that you can use with transmission:
 Once the download is complete you can find the file in the Downloads folder. Please note usually once the download is complete, the torrent client will continue to seed the file. Seeding is when you continue to share the file with others who are downloading it. This is important because it helps to keep the file available for others to download. If you don't want to seed the file, you can remove the torrent from the client with the `transmission-remote -t <torrent-id> -r` command. Also I would probably alias the `transmission-remote` command to something shorter like `tr` to make it easier to type.
 
 # Conclusion
-I know a lot of people use torrenting to download copyrighted material, but I would like to remind you that downloading copyrighted material without permission is illegal. Here are some tips to keep in mind when torrenting:
-- Always download torrents from trusted sources. Downloading torrents from untrusted sources can lead to malware being installed on your computer.
-- Always use a VPN when torrenting. A VPN will encrypt your internet connection and hide your IP address, making it harder for people to track what you are downloading. Note anyone can see what IP addresses are downloading a torrent since it is a peer-to-peer network and your IP address is publicly visible, so if you do download copyrighted material without permission, don't be surprised if you get a letter from your ISP.
 
 I hope this article helps you get started with torrenting. If you have any questions or need help, feel free to ask in the comments below.
 
