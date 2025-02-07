@@ -60,6 +60,6 @@ Once the download is complete you can find the file in the Downloads folder. Ple
 
 # Conclusion
 
-I hope this article helps you get started with torrenting. If you have any questions or need help, feel free to ask in the comments below.
+I hope this article helps you get started with torrenting.
 
 
