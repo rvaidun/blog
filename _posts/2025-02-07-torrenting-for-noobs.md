@@ -5,7 +5,6 @@ date:   2025-02-07 12:52:08 -0800
 categories: general
 ---
 
-# Safely torrenting for noobs
 This article will discuss how to safely torrent files. It is intended for people who are new to torrenting and want to learn how to do it safely.
 
 # What is torrenting?
