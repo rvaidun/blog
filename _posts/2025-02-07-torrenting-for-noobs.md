@@ -8,7 +8,9 @@ categories: general
 This article will discuss how to safely torrent files. It is intended for people who are new to torrenting and want to learn how to do it safely.
 
 # What is torrenting?
-Torrenting is a way to share files over the internet. It works by breaking up the file into small pieces and distributing them across a network of computers. When you download a file using a torrent, you are actually downloading pieces of the file from multiple sources at the same time. This makes the download faster and more reliable than downloading the file from a single source. It also makes it harder for authorities to track who is hosting the file since the file is spread out across multiple servers/computers and taking down one server/computer won't stop the file from being shared. It is important to note that torrenting is not illegal, but downloading copyrighted material without permission is illegal.
+Torrenting is a way to share files over the internet. It works by breaking up the file into small pieces and distributing them across a network of computers. When you download a file using a torrent, you are actually downloading pieces of the file from multiple sources at the same time. This makes the download faster and more reliable than downloading the file from a single source. It also makes it harder for authorities to track who is hosting the file since the file is spread out across multiple servers/computers and taking down one server/computer won't stop the file from being shared. It is important to note that torrenting is not illegal, but downloading copyrighted material without permission is illegal. The Verge made a nice [video](https://www.youtube.com/watch?v=OFswNCU5CKA&ab_channel=TheVerge) explaining how torrenting works.
+
+
 
 ## Important things to keep in mind
  Here are some tips to keep in mind when torrenting:
@@ -29,7 +31,7 @@ brew install transmission-cli
 ```
 
 # Usage
-For this example I will be downloading the latest Ubuntu ISO. To download the Ubuntu ISO, you first need to get a magnet link or a torrent file. You can get the magnet link from the Ubuntu website. Once you have the magnet link, you can start the download by running the following command:
+For this example I will be downloading the latest Ubuntu ISO. To download the Ubuntu ISO, you first need to get a magnet link or a torrent file. You can get the torrent file from the [Ubuntu website](https://ubuntu.com/download/alternative-downloads). Once you have the torrent file, you can start the download by running the following command:
 ```bash
 (venv) ➜  my-blog git:(main) ✗ transmission-daemon
 (venv) ➜  my-blog git:(main) ✗ transmission-remote -a "/Users/rahulvaidun/Downloads/ubuntu-24.04.1-desktop-amd64.iso.torrent"
@@ -46,6 +48,7 @@ Sum:            106.8 MB               0.0  6463.0
 ```
 Here you can see the status of the download, how much of the file has been downloaded, the estimated time remaining, the upload and download speed, and the name of the file being downloaded.
 Here are some useful commands that you can use with transmission:
+- `transmission-remote -a <torrent-file or magnet file>` - Add a torrent file to the transmission daemon.
 - `transmission-remote -l` - List all the torrents being downloaded.
 - `transmission-remote -t <torrent-id> -r` - Remove the torrent with the given id.
 - `transmission-remote -t all --remove` - Remove all the torrents.
