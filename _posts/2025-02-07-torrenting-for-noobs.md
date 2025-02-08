@@ -14,8 +14,8 @@ Torrenting is a way to share files over the internet. It works by breaking up th
 
 ## Important things to keep in mind
  Here are some tips to keep in mind when torrenting:
-- Always download torrents from trusted sources. Downloading torrents from untrusted sources can lead to malware being installed on your computer.
-- Always use a VPN when torrenting. A VPN will encrypt your internet connection and hide your IP address, making it harder for people to track what you are downloading. Note anyone can see what IP addresses are downloading a torrent since it is a peer-to-peer network and your IP address is publicly visible, so if you do download copyrighted material without permission, don't be surprised if you get a letter from your ISP.
+- **Always download torrents from trusted sources.** Downloading torrents from untrusted sources can lead to malware being installed on your computer.
+- **Always use a VPN when torrenting.** A VPN will encrypt your internet connection and hide your IP address, making it harder for people to track what you are downloading. Note anyone can see what IP addresses are downloading a torrent since it is a peer-to-peer network and your IP address is publicly visible, so if you do download copyrighted material without permission and don't use a VPN don't be surprised if you get a letter from your ISP. I personally use [NordVPN](https://nordvpn.com/) and have been happy with it. IMO VPN subscriptions are very worth it since they are very cheap (cheaper than almost all streaming services) and provide a lot of value. You can even use a VPN to access content that is not available in your country i.e. Netflix shows that are only available in a certain country.
 
 # Torrent Client
 The first thing you need to do to start torrenting is to download a torrent client. A torrent client is a program that allows you to download and upload files using the BitTorrent protocol. There are many different torrent clients available, but I feel like most of them are bloated with ads and unnecessary features. This article will use the [transmission](https://transmissionbt.com/) client and how to use it through the command line. If you are scared of CLI and want a GUI transmission client, you can download it from [here](https://transmissionbt.com/download/).
@@ -48,7 +48,7 @@ Sum:            106.8 MB               0.0  6463.0
 ```
 Here you can see the status of the download, how much of the file has been downloaded, the estimated time remaining, the upload and download speed, and the name of the file being downloaded.
 Here are some useful commands that you can use with transmission:
-- `transmission-remote -a <torrent-file or magnet file>` - Add a torrent file to the transmission daemon.
+- `transmission-remote -a <torrent-file or magnet link>` - Add a torrent file or magnet link to the transmission daemon.
 - `transmission-remote -l` - List all the torrents being downloaded.
 - `transmission-remote -t <torrent-id> -r` - Remove the torrent with the given id.
 - `transmission-remote -t all --remove` - Remove all the torrents.
