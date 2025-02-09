@@ -59,7 +59,7 @@ Here are some useful commands that you can use with transmission:
 - `transmission-remote -w ~/transmission_torrents` - Change the download location to the Downloads folder.
 - `watch --interval 1 'transmission-remote -l'` - Watch the status of the torrents being downloaded every second.
 
-Once the download is complete you can find the file in the Downloads folder. Please note usually once the download is complete, the torrent client will continue to seed the file. Seeding is when you continue to share the file with others who are downloading it. This is important because it helps to keep the file available for others to download. If you don't want to seed the file, you can remove the torrent from the client with the `transmission-remote -t <torrent-id> -r` command. Also I would probably alias the `transmission-remote` command to something shorter like `tr` to make it easier to type.
+Once the download is complete you can find the file in the Downloads folder. Please note usually once the download is complete, the torrent client will continue to seed the file. Seeding is when you continue to share the file with others who are downloading it. This is important because it helps to keep the file available for others to download. This effectively means other people who are trying to download the file may get a piece of the file from your computer. If you aren't using a VPN your ISP can even see that you are sharing the file from your IP. If you don't want to seed the file, you can remove the torrent from the client with the `transmission-remote -t <torrent-id> -r` command. Also I would probably alias the `transmission-remote` command to something shorter like `tr` to make it easier to type.
 
 # Conclusion
 
