@@ -62,7 +62,7 @@ Here are some useful commands that you can use with transmission:
 Once the download is complete you can find the file in the Downloads folder. Please note usually once the download is complete, the torrent client will continue to seed the file. Seeding is when you continue to share the file with others who are downloading it. This is important because it helps to keep the file available for others to download. This effectively means other people who are trying to download the file may get a piece of the file from your computer. If you aren't using a VPN your ISP can even see that you are sharing the file from your IP. If you don't want to seed the file, you can remove the torrent from the client with the `transmission-remote -t <torrent-id> -r` command. Also I would probably alias the `transmission-remote` command to something shorter like `tr` to make it easier to type.
 
 # Automatically connect to the VPN
-If you are like me you might forget to connect to the VPN before starting the download. To solve this problem I wrote a simple bash script that will automatically connect to the VPN before starting the download. You can save the following script as `torrent.sh` and run it with the same arguments as the `transmission-remote` command.
+If you are like me you might forget to connect to the VPN before starting the download. To solve this problem I wrote a simple bash script that will automatically connect to the VPN before starting the download.
 
 One dependency of this script is `vpnutil` which is a simple command line tool to manage VPN connections. This command line tool is part of the [VPNStatus](https://github.com/Timac/VPNStatus) project. You can install via homebrew like such
 ```
@@ -70,7 +70,7 @@ brew tap timac/vpnstatus
 brew install timac/vpnstatus/vpnutil
 ```
 
-Now you need to manually add the VPN connection to macOS system settings. NordVPN provides a guide for how to do this [here](https://support.nordvpn.com/hc/en-us/articles/19921536696977-How-to-connect-to-NordVPN-with-IKEv2-IPSec-on-macOS#macOS-14-15). Once you have added the VPN connection, you can run the following script to connect to the VPN and start the download.
+Now you need to manually add the VPN connection to macOS system settings. NordVPN provides a guide for how to do this [here](https://support.nordvpn.com/hc/en-us/articles/19921536696977-How-to-connect-to-NordVPN-with-IKEv2-IPSec-on-macOS#macOS-14-15). Once you have added the VPN connection, you can use the following script as a wrapper to `transmission-remote` to connect to the VPN before starting the download:
 ```bash
 #!/bin/bash
 
