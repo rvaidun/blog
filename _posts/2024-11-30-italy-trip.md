@@ -3,7 +3,7 @@ layout: post
 title:  "Italy Trip November"
 date:   2024-11-29 12:52:08 -0800
 categories: travel
-draft: true
+draft: false
 ---
 
 ## Introduction
@@ -16,7 +16,6 @@ The weather in Italy during November is pleasant but chilly. You can expect warm
 My trip started in Milan, where we flew from San Francisco. We stayed at [Ostello Bello][ostello-bello] Hostel in Milan which was pretty nice. However, we paid too much, around 250 euros per night. The location of the dormitory was terrific, and it was a few minutes walk from the central train station in Milan. The airport to Milan is about 50 minutes by train ride and costs 15 euros per pp. The dorm was standard; however, the shower was small, which I found standard in most places in Italy. The hostel was lively at night, with a full bar and live music.
 
 We only got in around 18:00, and it was already dark, so we didn’t have time to see much. We checked out the Duomo di Milano, which was pretty breathtaking as you walked out of the train station. However, the surrounding area is a big tourist trap. We paid 22 euro pp for an Aperol Spritz 💀. The first night, we had a nice pizza at Berbere Pizza, which didn’t break the bank, followed by a nice chill night at the hostel.
-
 # Lake Como (Day 2)
 On Day 2 after a leisure morning we made a day trip over to Lake Como. From Milan Centrale station Lake Como is only a 40 minute journey. Once we got to Lake Como we spent about an hour walking around the Lake seeing all the shops and restaurants in the area. The Lake is beautiful and massive and there are many boats and ferries taking you to the small towns located all over the Lake.
 
